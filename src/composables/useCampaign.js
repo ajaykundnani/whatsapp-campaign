@@ -85,10 +85,16 @@ Thank you, and happy travelling`)
 
   const canStart = computed(() => contacts.value.length > 0 && message.value.trim().length > 0 && !campaignActive.value)
 
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile/i.test(navigator.userAgent)
+  }
+
   function openWhatsApp(phone) {
     const text = contactVariantMap.value[phone] || message.value
     const encoded = encodeURIComponent(text)
-    const url = `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`
+    const url = isMobileDevice()
+      ? `https://wa.me/${phone}?text=${encoded}`
+      : `https://web.whatsapp.com/send?phone=${phone}&text=${encoded}`
     window.open(url, '_blank')
   }
 
